@@ -1,8 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
 
-import '../firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -12,7 +11,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  
   late final TextEditingController _email;
   late final TextEditingController _password;
 
@@ -29,70 +27,48 @@ class _LoginViewState extends State<LoginView> {
     _password.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
+    return Column(
+      children: [
+        TextField(
+          controller: _email,
+          keyboardType: TextInputType.emailAddress,
+          decoration: const InputDecoration(hintText: 'Enter your email here.'),
         ),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Column(
-                children: [
-                  TextField(
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                        hintText: 'Enter your email here.'),
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                        hintText: 'Enter your password here.'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      try{
-                        final email = _email.text;
-                        final password = _password.text;
+        TextField(
+          controller: _password,
+          obscureText: true,
+          enableSuggestions: false,
+          autocorrect: false,
+          decoration:
+              const InputDecoration(hintText: 'Enter your password here.'),
+        ),
+        TextButton(
+          onPressed: () async {
+            try {
+              final email = _email.text;
+              final password = _password.text;
 
-                        final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-                        print(userCredential);
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          print("User Not Found");
-                        }else if(e.code == 'wrong-password'){
-                          print("Wrong Password");
-                        }
-                      }
-                      
-                      catch (e) {
-                        print("Something bad happen.");
-                        print(e.runtimeType);
-                        print(e);
-                      }
-                      
-                    },
-                    child: const Text('Login'),
-                  ),
-                ],
-              );
-
-            default:
-              return const Text('Loading...');
-          }
-        },
-      ),
+              final userCredential = await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(email: email, password: password);
+              print(userCredential);
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'user-not-found') {
+                print("User Not Found");
+              } else if (e.code == 'wrong-password') {
+                print("Wrong Password");
+              }
+            } catch (e) {
+              print("Something bad happen.");
+              print(e.runtimeType);
+              print(e);
+            }
+          },
+          child: const Text('Login'),
+        ),
+      ],
     );
   }
-
 }
