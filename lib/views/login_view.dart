@@ -1,7 +1,6 @@
-// ignore_for_file: file_names
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -31,17 +30,16 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: const Text('Login'),
       ),
-
       body: Column(
         children: [
           TextField(
             controller: _email,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(hintText: 'Enter your email here.'),
+            decoration:
+                const InputDecoration(hintText: 'Enter your email here.'),
           ),
           TextField(
             controller: _password,
@@ -56,35 +54,36 @@ class _LoginViewState extends State<LoginView> {
               try {
                 final email = _email.text;
                 final password = _password.text;
-    
-                // ignore: unused_local_variable
-                final userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(email: email, password: password);
-                // print(userCredential);
+                
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/notes/',
+                  (route) => false,
+                );
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  // print("User Not Found");
+                  devtools.log("User Not Found");
                 } else if (e.code == 'wrong-password') {
-                  // print("Wrong Password");
+                  devtools.log("Wrong Password");
                 }
               } catch (e) {
-                // print("Something bad happen.");
-                // print(e.runtimeType);
-                // print(e);
+                devtools.log("Something bad happened");
+                devtools.log(e.runtimeType.toString());
+                devtools.log(e.toString());
               }
             },
             child: const Text('Login'),
           ),
           TextButton(
               onPressed: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/register/',
-                   (route) => false
-                );
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/register/', (route) => false);
               },
-              child: const Text('Not registered yet? Register here!')
-              
-          ),
+              child: const Text('Not registered yet? Register here!')),
         ],
       ),
     );

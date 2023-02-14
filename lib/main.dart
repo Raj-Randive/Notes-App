@@ -5,7 +5,6 @@ import 'package:notesapp/views/Login_View.dart';
 import 'package:notesapp/views/register_view.dart';
 import 'package:notesapp/views/verify_emial_view.dart';
 import 'firebase_options.dart';
-import 'dart:developer' as devtools show log;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +19,7 @@ void main() async {
       routes: {
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
+        '/notes/': (context) => const NotesView(),
       },
     ),
   );
@@ -105,6 +105,9 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 }
+
+
+
 
 Future<bool> showLogOutDialog(BuildContext context) {
   return showDialog<bool>(
