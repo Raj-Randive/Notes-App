@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:notesapp/views/Login_View.dart';
+import 'package:notesapp/views/login_view.dart';
 import 'package:notesapp/views/register_view.dart';
 import 'package:notesapp/views/verify_emial_view.dart';
 import 'firebase_options.dart';
@@ -76,15 +76,20 @@ class _NotesViewState extends State<NotesView> {
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               // devtools.log(value.toString());
-              switch (value){
+              switch (value) {
                 case MenuAction.logout:
                   final shouldLogOut = await showLogOutDialog(context);
                   // devtools.log(shouldLogOut.toString());
-                  if(shouldLogOut){
+                  if (shouldLogOut) {
                     await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil('/login/', (_) => false);
-                  }
-                  else{
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login/',
+                        (_) => false,
+                      );
+                    }
+                  } 
+                  else {
 
                   }
                   break;
@@ -105,9 +110,6 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 }
-
-
-
 
 Future<bool> showLogOutDialog(BuildContext context) {
   return showDialog<bool>(
