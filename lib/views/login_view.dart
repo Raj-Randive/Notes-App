@@ -1,7 +1,10 @@
 // ignore_for_file: file_names
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
+import 'package:notesapp/constants/routes.dart';
+import 'package:notesapp/utilities/show_error_dialog.dart';
+// import '../utilities/show_error_dialog.dart';
+// import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -63,20 +66,26 @@ class _LoginViewState extends State<LoginView> {
 
                 if (context.mounted) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/notes/',
+                    notesRoute,
                     (route) => false,
                   );
                 }
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  devtools.log("User Not Found");
-                } else if (e.code == 'wrong-password') {
-                  devtools.log("Wrong Password");
+                  // devtools.log("User Not Found");
+                  await showErrorDialog(context, 'User Not Found');
+                } 
+                else if (e.code == 'wrong-password') {
+                  await showErrorDialog(context, 'Wrong Credentials');
+                }
+                else{
+                  await showErrorDialog(context, 'Error: ${e.code}');
                 }
               } catch (e) {
-                devtools.log("Something bad happened");
-                devtools.log(e.runtimeType.toString());
-                devtools.log(e.toString());
+                // devtools.log("Something bad happened");
+                // devtools.log(e.runtimeType.toString());
+                // devtools.log(e.toString());
+                  await showErrorDialog(context, e.toString() );
               }
             },
             child: const Text('Login'),
