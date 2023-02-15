@@ -77,23 +77,25 @@ class _LoginViewState extends State<LoginView> {
                 } 
                 else if (e.code == 'wrong-password') {
                   await showErrorDialog(context, 'Wrong Credentials');
-                }
-                else{
+                } 
+                else {
                   await showErrorDialog(context, 'Error: ${e.code}');
                 }
               } catch (e) {
                 // devtools.log("Something bad happened");
                 // devtools.log(e.runtimeType.toString());
                 // devtools.log(e.toString());
-                  await showErrorDialog(context, e.toString() );
+                await showErrorDialog(context, e.toString());
               }
             },
             child: const Text('Login'),
           ),
           TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/register/', (route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/register/',
+                  (route) => false,
+                );
               },
               child: const Text('Not registered yet? Register here!')),
         ],
