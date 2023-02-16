@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notesapp/constants/routes.dart';
 import 'package:notesapp/enums/menu_actions.dart';
+import 'package:notesapp/services/auth/auth_service.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -9,8 +9,6 @@ class NotesView extends StatefulWidget {
   @override
   State<NotesView> createState() => _NotesViewState();
 }
-
-
 
 class _NotesViewState extends State<NotesView> {
   @override
@@ -21,13 +19,13 @@ class _NotesViewState extends State<NotesView> {
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
-              // devtools.log(value.toString());
+              
               switch (value) {
                 case MenuAction.logout:
                   final shouldLogOut = await showLogOutDialog(context);
-                  // devtools.log(shouldLogOut.toString());
+                  
                   if (shouldLogOut) {
-                    await FirebaseAuth.instance.signOut();
+                    await AuthService.firebase().logOut();
                     if (context.mounted) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         loginRoute,
